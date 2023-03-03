@@ -1,0 +1,28 @@
+from netmiko import ConnectHandler
+
+# Define the device parameters
+device = {
+    'device_type': 'cisco_ios',
+    'ip': '192.168.1.1',
+    'username': 'admin',
+    'password': 'password',
+    'secret': 'enable_password'
+}
+
+# Establish an SSH connection to the device
+net_connect = ConnectHandler(**device)
+net_connect.enable()
+
+# Configure OSPF
+config_commands = [
+    'router ospf 1',
+    'network 10.0.0.0 0.0.0.255 area 0',
+    'network 192.168.1.0 0.0.0.255 area 0'
+]
+output = net_connect.send_config_set(config_commands)
+
+# Display the output of the configuration commands
+print(output)
+
+# Disconnect from the device
+net_connect.disconnect()
